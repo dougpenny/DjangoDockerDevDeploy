@@ -1,0 +1,38 @@
+upstream django_server {
+    server django:8001 fail_timeout=0;
+}
+
+server {
+    listen 80;
+    listen 443 ssl;
+    server_name ${SERVER_NAME};
+    keepalive_timeout 5;
+    
+    error_log /var/log/nginx/nginx-error.log;
+    
+    gzip on;
+    gzip_min_length 100;
+    gzip_buffers 8 32k;
+    gzip_types text/plain text/css application/x-javascript text/xml application/xml text/javascript;
+    gzip_vary on;
+
+    location /static {
+        alias ${DEV_STATIC_PATH};
+    }
+
+    location /resources {
+        alias ${DEV_RESOURCES_PATH};
+    }
+
+    location / {
+        proxy_redirect off;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header Host $http_host;
+        proxy_pass http://django_server;
+    }
+
+    ssl_certificate ${SSL_CERT};
+    ssl_certificate_key ${SSL_KEY};
+    ssl_protocols TLSv1.2;
+}

@@ -1,0 +1,42 @@
+version: '3.9'
+
+services:
+  postgres:
+    image: postgres:14-alpine
+    environment:
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - pgdata:/var/lib/postgresql/data/
+    networks:
+      - main
+  django:
+    build: .
+    command: gunicorn --pythonpath '/code/mysite' mysite.asgi:application -w 4 -b :8001 -k uvicorn.workers.UvicornWorker --reload
+    volumes:
+      - ./mysite:/code/mysite/
+    networks:
+      - main
+    tty: true
+    depends_on:
+      - postgres
+  nginx:
+    image: nginx:1.21-alpine
+    env_file: ./nginx.env
+    volumes:
+      - ./mysite/static:/usr/share/nginx/mysite/static
+      - ./mysite/resources:/usr/share/nginx/mysite/resources
+      - ./${NGINX_CONF}:/etc/nginx/templates
+      - ${LOCAL_CERTS_PATH}:${NGINX_CERTS_PATH}
+    ports:
+      - 8000:80
+      - 8443:443
+    networks:
+      - main
+    depends_on:
+      - django
+
+volumes:
+  pgdata:
+
+networks:
+  main:
