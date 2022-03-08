@@ -12,9 +12,9 @@ services:
       - main
   django:
     build: .
-    command: uvicorn --app-dir /code/mysite mysite.asgi:application --host 0.0.0.0 --port 8001 --lifespan=off --reload-dir /code/mysite --reload
+    command: uvicorn --app-dir /code/mysite config.asgi:application --host 0.0.0.0 --port 8001 --lifespan=off --reload-dir /code/mysite --reload
     #command: gunicorn --pythonpath '/code/mysite' config.wsgi:application -w 4 -b :8001 --reload
-    #command: gunicorn --pythonpath '/code/mysite' mysite.asgi:application -w 4 -b :8001 -k uvicorn.workers.UvicornWorker --reload
+    #command: gunicorn --pythonpath '/code/mysite' config.asgi:application -w 4 -b :8001 -k uvicorn.workers.UvicornWorker --reload
     volumes:
       - ./mysite:/code/mysite/
     networks:
