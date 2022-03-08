@@ -3,10 +3,17 @@
 import os
 import sys
 
+# Read environment variables from a .env file
+from dotenv import load_dotenv, find_dotenv
+load_dotenv(find_dotenv())
+
 
 def main():
     """Run administrative tasks."""
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'mysite.settings')
+    if os.getenv('PRODUCTION', False) == 'True':
+        os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'mysite.settings.production')
+    else:
+        os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'mysite.settings.local')
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:
