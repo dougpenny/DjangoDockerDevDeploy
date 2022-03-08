@@ -12,11 +12,11 @@ services:
       - main
   django:
     build: .
-    command: uvicorn --app-dir /code/mysite config.asgi:application --host 0.0.0.0 --port 8001 --lifespan=off --reload-dir /code/mysite --reload
-    #command: gunicorn --pythonpath '/code/mysite' config.wsgi:application -w 4 -b :8001 --reload
-    #command: gunicorn --pythonpath '/code/mysite' config.asgi:application -w 4 -b :8001 -k uvicorn.workers.UvicornWorker --reload
+    command: uvicorn --app-dir /code/django config.asgi:application --host 0.0.0.0 --port 8001 --lifespan=off --reload-dir /code/django --reload
+    #command: gunicorn --pythonpath '/code/django' config.wsgi:application -w 4 -b :8001 --reload
+    #command: gunicorn --pythonpath '/code/django' config.asgi:application -w 4 -b :8001 -k uvicorn.workers.UvicornWorker --reload
     volumes:
-      - ./mysite:/code/mysite/
+      - ./django:/code/django/
     networks:
       - main
     tty: true
@@ -26,8 +26,8 @@ services:
     image: nginx:1.21-alpine
     env_file: ./nginx.env
     volumes:
-      - ./mysite/static:/usr/share/nginx/mysite/static
-      - ./mysite/resources:/usr/share/nginx/mysite/resources
+      - ./django/static:/usr/share/nginx/django/static
+      - ./django/resources:/usr/share/nginx/django/resources
       - ./${NGINX_CONF}:/etc/nginx/templates
       - ${LOCAL_CERTS_PATH}:${NGINX_CERTS_PATH}
     ports:
