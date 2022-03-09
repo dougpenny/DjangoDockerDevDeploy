@@ -12,6 +12,31 @@ Are you fed up with managing virtual environments and looking for a way to clean
 * [License](#license)
 
 ---
+### Directory Layout
+
+```
+.
+├── /django/                     # Top-level Django project
+│   ├── /config/                 # Configuration root directory
+│   │   ├── /settings/           # Django settings files
+│   │   │   ├── base.py          # Shared, base settings
+│   │   │   ├── local.py         # Settings used for local development
+│   │   │   ├── production.py    # Settings used for production
+│   │   ├── asgi.py              # ASGI config file
+│   │   ├── urls.py              # Base URLConf file
+│   │   ├── wsgi.py              # WSGI config file
+│   ├── .env.sample              # Environment variables for the Django project
+│   ├── manage.py                # Django management file
+├── /nginx-dev/                  # Nginx local development configuration
+│   ├── default.conf.template    # Nginx configuration template for local development
+├── /nginx-prod/                 # Nginx production configuration
+│   ├── default.conf.template    # Nginx configuration template for production
+│── .env.sample                  # Environment variables for docker-compose.yml
+│── Dockerfile                   # Instructions for building the Docker images
+│── docker-compose.yml           # Configuration for the various services
+│── nginx.env.sample             # Environment variables for Nginx configuration
+└── requirements.txt             # List of Python modules to install
+```
 
 ## Usage
 Fork the repository and check it out locally. A basic Django project is included, so you can change into the directory and then build and start the app by running:
