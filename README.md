@@ -16,6 +16,7 @@ Are you fed up with managing virtual environments and looking for a way to clean
 
 ```
 .
+├── /certs/                      # Local development security certificates
 ├── /django/                     # Top-level Django project
 │   ├── /config/                 # Configuration root directory
 │   │   ├── /settings/           # Django settings files
