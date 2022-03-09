@@ -12,9 +12,23 @@ services:
       - main
   django:
     build: .
+    #
+    # By default, we are proxying from Nginx directly to Uvicorn. If you would like to use Gunicorn instead,
+    # comment out the line below and uncomment the appropriate Gunicorn command.
+    #
     command: uvicorn --app-dir /code/django config.asgi:application --host 0.0.0.0 --port 8001 --lifespan=off --reload-dir /code/django --reload
-    #command: gunicorn --pythonpath '/code/django' config.wsgi:application -w 4 -b :8001 --reload
+    
+    #
+    # This command will use Gunicorn as the process manager for Uvicorn with four worker processes.
+    # You will need to add Gunicorn to the requirements.text file.
+    #
     #command: gunicorn --pythonpath '/code/django' config.asgi:application -w 4 -b :8001 -k uvicorn.workers.UvicornWorker --reload
+
+    #
+    # This command will proxy fron Nginx directly to Gunicorn; this is the traditional, synchronous
+    # approach for WSGI deployments. You will need to add Gunicorn to the requirements.txt file.
+    #
+    #command: gunicorn --pythonpath '/code/django' config.wsgi:application -w 4 -b :8001 --reload
     volumes:
       - ./django:/code/django/
     networks:
